@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="f9a540f9-0308-4ef4-ad32-e426899f3413" name="更改" comment="" />
+    <list default="true" id="f9a540f9-0308-4ef4-ad32-e426899f3413" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercodeV1.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/g11fpt.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/g11fpt.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py" beforeDir="false" afterPath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,28 +24,77 @@
       </list>
     </option>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2yHqY4Jg7cA7vNPhO0Qo4v2k0yG" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.v1.executor": "Run",
-    "Python.v2.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.ICS3U_2025_mcd_startercode.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ICS3U_2025_mcd_startercodeV1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.v1.executor&quot;: &quot;Run&quot;,
+    &quot;Python.v2.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/python save/G11CSFPT/ICS3U_FPT_2025_mcdonalds&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\python save\G11CSFPT\ICS3U_FPT_2025_mcdonalds" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="ICS3U_2025_mcd_startercode" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="g11fpt" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.ICS3U_2025_mcd_startercode" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PY-243.26053.29" />
-        <option value="bundled-python-sdk-b1dbf8ef85a6-4df51de95216-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.26053.29" />
+        <option value="bundled-python-sdk-7a29c1521ef0-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.298" />
       </set>
     </attachedChunks>
   </component>
@@ -48,6 +107,8 @@
       <option name="presentableId" value="Default" />
       <updated>1749501890773</updated>
       <workItem from="1749501891811" duration="293000" />
+      <workItem from="1749560004484" duration="2806000" />
+      <workItem from="1749573349229" duration="2490000" />
     </task>
     <servers />
   </component>
@@ -56,6 +117,9 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/g11fpt$v1.coverage" NAME="v1 覆盖结果" MODIFIED="1749502139740" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/G11CSFPT$ICS3U_2025_mcd_startercodeV1.coverage" NAME="ICS3U_2025_mcd_startercodeV1 Coverage Results" MODIFIED="1749561318632" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds" />
     <SUITE FILE_PATH="coverage/g11fpt$v2.coverage" NAME="v2 覆盖结果" MODIFIED="1749502175337" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/G11CSFPT$v1.coverage" NAME="v1 Coverage Results" MODIFIED="1749576127137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds" />
+    <SUITE FILE_PATH="coverage/G11CSFPT$ICS3U_2025_mcd_startercode.coverage" NAME="ICS3U_2025_mcd_startercode Coverage Results" MODIFIED="1749573387766" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds" />
   </component>
 </project>
