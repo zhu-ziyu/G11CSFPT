@@ -1,0 +1,558 @@
+Index: ICS3U_FPT_2025_mcdonalds/v3.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import tkinter as tk\r\nfrom tkinter.font import Font\r\n\r\n# ——— 数据读取函数（无需理解，可直接使用） ———\r\ndef generate_list_mcd(filename):\r\n    name_list = []\r\n    calorie_list = []\r\n    fat_list = []\r\n    sugar_list = []\r\n    category_list = []\r\n    allergens_list = []\r\n    with open(filename, encoding=\"utf-8\", errors='replace') as file_in:\r\n        file_in.readline()  # 跳过表头\r\n        for line in file_in:\r\n            parts = line.strip().split(\",\")\r\n            if len(parts) < 6:\r\n                continue\r\n            name_list.append(parts[0])\r\n            calorie_list.append(int(parts[1]))\r\n            fat_list.append(float(parts[2]))\r\n            sugar_list.append(int(parts[3]))\r\n            category_list.append(parts[4])\r\n            allergens_list.append(parts[5])\r\n    return name_list, calorie_list, fat_list, sugar_list, category_list, allergens_list\r\n\r\n# ——— 回调函数占位 ———\r\ndef search():\r\n    pass\r\n\r\ndef get_ai_advice():\r\n    pass\r\n\r\ndef update_filters():\r\n    pass\r\n\r\n# ——— 读取数据 ———\r\nall_name_list, *_ = generate_list_mcd(\"mcd_clean.csv\")\r\n\r\n# ——— 主窗口基础设置 ———\r\nroot = tk.Tk()\r\nroot.title(\"ICS3U Final Performance Task\")\r\nroot.geometry(\"1920x720\")\r\nroot.configure(bg=\"red\")\r\n\r\n# 把 root 分成左右两部分\r\nroot.grid_rowconfigure(0, weight=1)\r\nroot.grid_columnconfigure(0, weight=2, minsize=900)   # 左侧 panel\r\nroot.grid_columnconfigure(1, weight=3, minsize=1000)  # 右侧 listbox\r\n\r\nleft_frame = tk.Frame(root, bg=\"red\")\r\nleft_frame.grid(row=0, column=0, sticky=\"nsew\", padx=20, pady=20)\r\n\r\nright_frame = tk.Frame(root, bg=\"red\")\r\nright_frame.grid(row=0, column=1, sticky=\"nsew\", padx=20, pady=20)\r\n\r\n# ——— 左侧布局 ———\r\n# 列宽分配：0 = 标签，1 = Spinbox/按钮，2 = Scale/Go\r\nleft_frame.grid_columnconfigure(0, weight=1, minsize=300)\r\nleft_frame.grid_columnconfigure(1, weight=1, minsize=300)\r\nleft_frame.grid_columnconfigure(2, weight=2, minsize=400)\r\n\r\n# 标题 & logo\r\ntitle_font = Font(family=\"Arial\", size=64, weight=\"bold\")\r\ntitle_label = tk.Label(left_frame, text=\"ICS3U1-FPT\", font=title_font, fg=\"white\", bg=\"red\")\r\ntitle_label.grid(row=0, column=0, columnspan=2, sticky=\"w\")\r\n\r\n# 搜索框 & GO\r\nsearch_entry = tk.Entry(left_frame,\r\n                        font=(\"Arial\", 32),\r\n                        fg=\"white\",\r\n                        bg=\"#FF8C00\",\r\n                        insertbackground=\"white\")\r\nsearch_entry.insert(0, \"SEARCH :\")\r\nsearch_entry.grid(row=1, column=0, columnspan=2, sticky=\"we\", pady=20, ipady=10)\r\n\r\n\r\ngo_button = tk.Button(left_frame,\r\n                      text=\"GO\",\r\n                      font=(\"Arial\", 32),\r\n                      fg=\"white\",\r\n                      bg=\"#FF8C00\",\r\n                      command=search)\r\ngo_button.grid(row=1, column=2,\r\n               rowspan=2,\r\n               sticky=\"we\",\r\n               pady=20,\r\n               padx=(20,0),\r\n               ipady=40)\r\n\r\n\r\n# AI 建议 按钮\r\nai_button = tk.Button(left_frame,\r\n                      text=\"Get some advice from AI :\",\r\n                      font=(\"Arial\", 28),\r\n                      fg=\"white\",\r\n                      bg=\"#FF8C00\",\r\n                      anchor=\"w\",\r\n                      command=get_ai_advice)\r\nai_button.grid(row=2, column=0, columnspan=2, sticky=\"we\", pady=10)\r\n\r\n# 滑块 + Spinbox\r\ncal_var = tk.DoubleVar()\r\nfat_var = tk.DoubleVar()\r\nsug_var = tk.DoubleVar()\r\n\r\n# MAX CAL\r\nlbl_cal = tk.Label(left_frame, text=\"MAX CAL\", font=(\"Arial\", 24), fg=\"white\", bg=\"red\")\r\nlbl_cal.grid(row=3, column=0, sticky=\"w\", pady=5)\r\nsp_cal = tk.Spinbox(left_frame, from_=0, to=1000, font=(\"Arial\", 16),\r\n                    textvariable=cal_var, width=8)\r\nsp_cal.grid(row=3, column=1, sticky=\"w\")\r\nsc_cal = tk.Scale(left_frame, variable=cal_var, from_=0, to=1000,\r\n                  orient=\"horizontal\", length=400, command=lambda e: None)\r\nsc_cal.grid(row=3, column=2, sticky=\"w\")\r\n\r\n# MAX FAT\r\nlbl_fat = tk.Label(left_frame, text=\"MAX FAT\", font=(\"Arial\", 24), fg=\"white\", bg=\"red\")\r\nlbl_fat.grid(row=4, column=0, sticky=\"w\", pady=5)\r\nsp_fat = tk.Spinbox(left_frame, from_=0, to=200, font=(\"Arial\", 16),\r\n                    textvariable=fat_var, width=8)\r\nsp_fat.grid(row=4, column=1, sticky=\"w\")\r\nsc_fat = tk.Scale(left_frame, variable=fat_var, from_=0, to=200,\r\n                  orient=\"horizontal\", length=400, command=lambda e: None)\r\nsc_fat.grid(row=4, column=2, sticky=\"w\")\r\n\r\n# MAX SGR\r\nlbl_sug = tk.Label(left_frame, text=\"MAX SGR\", font=(\"Arial\", 24), fg=\"white\", bg=\"red\")\r\nlbl_sug.grid(row=5, column=0, sticky=\"w\", pady=5)\r\nsp_sug = tk.Spinbox(left_frame, from_=0, to=200, font=(\"Arial\", 16),\r\n                    textvariable=sug_var, width=8)\r\nsp_sug.grid(row=5, column=1, sticky=\"w\")\r\nsc_sug = tk.Scale(left_frame, variable=sug_var, from_=0, to=200,\r\n                  orient=\"horizontal\", length=400, command=lambda e: None)\r\nsc_sug.grid(row=5, column=2, sticky=\"w\")\r\n\r\n# Radiobuttons （左侧四个）\r\ncategory_var = tk.StringVar()\r\nrb_snack = tk.Radiobutton(left_frame, text=\"Snack & Sides\",    variable=category_var,\r\n                          value=\"Snack & Sides\",    font=(\"Arial\", 20),\r\n                          fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                          activebackground=\"red\", command=update_filters)\r\nrb_snack.grid(row=6, column=0, sticky=\"w\", pady=5)\r\n\r\nrb_burger = tk.Radiobutton(left_frame, text=\"Burger & Sandwiches\", variable=category_var,\r\n                           value=\"Burger & Sandwiches\", font=(\"Arial\", 20),\r\n                           fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                           activebackground=\"red\", command=update_filters)\r\nrb_burger.grid(row=7, column=0, sticky=\"w\", pady=5)\r\n\r\nrb_chicken = tk.Radiobutton(left_frame, text=\"Chicken & Fish\", variable=category_var,\r\n                            value=\"Chicken & Fish\", font=(\"Arial\", 20),\r\n                            fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                            activebackground=\"red\", command=update_filters)\r\nrb_chicken.grid(row=8, column=0, sticky=\"w\", pady=5)\r\n\r\nrb_desserts = tk.Radiobutton(left_frame, text=\"Desserts & Shakes\", variable=category_var,\r\n                             value=\"Desserts & Shakes\", font=(\"Arial\", 20),\r\n                             fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                             activebackground=\"red\", command=update_filters)\r\nrb_desserts.grid(row=9, column=0, sticky=\"w\", pady=5)\r\n\r\n# Radiobuttons （右侧四个）\r\nrb_mccafe = tk.Radiobutton(left_frame, text=\"McCafe\", variable=category_var,\r\n                           value=\"McCafe\", font=(\"Arial\", 20),\r\n                           fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                           activebackground=\"red\", command=update_filters)\r\nrb_mccafe.grid(row=6, column=1, sticky=\"w\", pady=5)\r\n\r\nrb_beverages = tk.Radiobutton(left_frame, text=\"Beverages\", variable=category_var,\r\n                              value=\"Beverages\", font=(\"Arial\", 20),\r\n                              fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                              activebackground=\"red\", command=update_filters)\r\nrb_beverages.grid(row=7, column=1, sticky=\"w\", pady=5)\r\n\r\nrb_condiments = tk.Radiobutton(left_frame, text=\"Condiments\", variable=category_var,\r\n                               value=\"Condiments\", font=(\"Arial\", 20),\r\n                               fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                               activebackground=\"red\", command=update_filters)\r\nrb_condiments.grid(row=8, column=1, sticky=\"w\", pady=5)\r\n\r\nrb_breakfast = tk.Radiobutton(left_frame, text=\"Breakfast\", variable=category_var,\r\n                              value=\"Breakfast\", font=(\"Arial\", 20),\r\n                              fg=\"white\", bg=\"red\", selectcolor=\"black\",\r\n                              activebackground=\"red\", command=update_filters)\r\nrb_breakfast.grid(row=9, column=1, sticky=\"w\", pady=5)\r\n\r\n\r\n# ——— 右侧 Listbox ———\r\nright_frame.grid_rowconfigure(0, weight=0)\r\nright_frame.grid_columnconfigure(0, weight=1)\r\nname_var = tk.StringVar(value=all_name_list)\r\nname_listbox = tk.Listbox(right_frame,\r\n                          listvariable=name_var,\r\n                          selectmode=tk.SINGLE,\r\n                          font=(\"Arial\", 14),\r\n                          bg=\"white\",\r\n                          fg=\"black\",\r\n                        height = 30\r\n                            )\r\nname_listbox.grid(row=0, column=0, sticky=\"nsew\")\r\n\r\n\r\n# ——— 启动主循环 ———\r\nroot.mainloop()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ICS3U_FPT_2025_mcdonalds/v3.py b/ICS3U_FPT_2025_mcdonalds/v3.py
+--- a/ICS3U_FPT_2025_mcdonalds/v3.py	(revision 585c150de8693be87d5203878d225dec520ff47c)
++++ b/ICS3U_FPT_2025_mcdonalds/v3.py	(date 1749647919317)
+@@ -1,7 +1,6 @@
+-import tkinter as tk
++from tkinter import *
+ from tkinter.font import Font
+ 
+-# ——— 数据读取函数（无需理解，可直接使用） ———
+ def generate_list_mcd(filename):
+     name_list = []
+     calorie_list = []
+@@ -23,21 +22,27 @@
+             allergens_list.append(parts[5])
+     return name_list, calorie_list, fat_list, sugar_list, category_list, allergens_list
+ 
+-# ——— 回调函数占位 ———
++
+ def search():
+-    pass
+-
++    get_ai_advice
+ def get_ai_advice():
+     pass
+ 
+ def update_filters():
+-    pass
++    rb_snack.get()
++    rb_burger.get()
++    rb_chicken.get()
++    rb_desserts.get()
++    rb_mccafe.get()
++    rb_beverages.get()
++    rb_condiments.get()
++    rb_breakfast.get()
+ 
+-# ——— 读取数据 ———
++#读取————表格（咕咕咕
+ all_name_list, *_ = generate_list_mcd("mcd_clean.csv")
+ 
+-# ——— 主窗口基础设置 ———
+-root = tk.Tk()
++
++root = Tk()
+ root.title("ICS3U Final Performance Task")
+ root.geometry("1920x720")
+ root.configure(bg="red")
+@@ -47,25 +52,24 @@
+ root.grid_columnconfigure(0, weight=2, minsize=900)   # 左侧 panel
+ root.grid_columnconfigure(1, weight=3, minsize=1000)  # 右侧 listbox
+ 
+-left_frame = tk.Frame(root, bg="red")
++left_frame = Frame(root, bg="red")
+ left_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
+ 
+-right_frame = tk.Frame(root, bg="red")
++right_frame = Frame(root, bg="red")
+ right_frame.grid(row=0, column=1, sticky="nsew", padx=20, pady=20)
+ 
+-# ——— 左侧布局 ———
+-# 列宽分配：0 = 标签，1 = Spinbox/按钮，2 = Scale/Go
++#左侧布局
+ left_frame.grid_columnconfigure(0, weight=1, minsize=300)
+ left_frame.grid_columnconfigure(1, weight=1, minsize=300)
+ left_frame.grid_columnconfigure(2, weight=2, minsize=400)
+ 
+ # 标题 & logo
+ title_font = Font(family="Arial", size=64, weight="bold")
+-title_label = tk.Label(left_frame, text="ICS3U1-FPT", font=title_font, fg="white", bg="red")
++title_label = Label(left_frame, text="ICS3U1-FPT", font=title_font, fg="white", bg="red")
+ title_label.grid(row=0, column=0, columnspan=2, sticky="w")
+ 
+ # 搜索框 & GO
+-search_entry = tk.Entry(left_frame,
++search_entry = Entry(left_frame,
+                         font=("Arial", 32),
+                         fg="white",
+                         bg="#FF8C00",
+@@ -74,7 +78,7 @@
+ search_entry.grid(row=1, column=0, columnspan=2, sticky="we", pady=20, ipady=10)
+ 
+ 
+-go_button = tk.Button(left_frame,
++go_button = Button(left_frame,
+                       text="GO",
+                       font=("Arial", 32),
+                       fg="white",
+@@ -89,7 +93,7 @@
+ 
+ 
+ # AI 建议 按钮
+-ai_button = tk.Button(left_frame,
++ai_button = Button(left_frame,
+                       text="Get some advice from AI :",
+                       font=("Arial", 28),
+                       fg="white",
+@@ -99,106 +103,105 @@
+ ai_button.grid(row=2, column=0, columnspan=2, sticky="we", pady=10)
+ 
+ # 滑块 + Spinbox
+-cal_var = tk.DoubleVar()
+-fat_var = tk.DoubleVar()
+-sug_var = tk.DoubleVar()
++cal_var = DoubleVar()
++fat_var = DoubleVar()
++sug_var = DoubleVar()
+ 
+ # MAX CAL
+-lbl_cal = tk.Label(left_frame, text="MAX CAL", font=("Arial", 24), fg="white", bg="red")
++lbl_cal = Label(left_frame, text="MAX CAL", font=("Arial", 24), fg="white", bg="red")
+ lbl_cal.grid(row=3, column=0, sticky="w", pady=5)
+-sp_cal = tk.Spinbox(left_frame, from_=0, to=1000, font=("Arial", 16),
++sp_cal = Spinbox(left_frame, from_=0, to=1000, font=("Arial", 16),
+                     textvariable=cal_var, width=8)
+ sp_cal.grid(row=3, column=1, sticky="w")
+-sc_cal = tk.Scale(left_frame, variable=cal_var, from_=0, to=1000,
++sc_cal = Scale(left_frame, variable=cal_var, from_=0, to=1000,
+                   orient="horizontal", length=400, command=lambda e: None)
+ sc_cal.grid(row=3, column=2, sticky="w")
+ 
+ # MAX FAT
+-lbl_fat = tk.Label(left_frame, text="MAX FAT", font=("Arial", 24), fg="white", bg="red")
++lbl_fat = Label(left_frame, text="MAX FAT", font=("Arial", 24), fg="white", bg="red")
+ lbl_fat.grid(row=4, column=0, sticky="w", pady=5)
+-sp_fat = tk.Spinbox(left_frame, from_=0, to=200, font=("Arial", 16),
++sp_fat = Spinbox(left_frame, from_=0, to=200, font=("Arial", 16),
+                     textvariable=fat_var, width=8)
+ sp_fat.grid(row=4, column=1, sticky="w")
+-sc_fat = tk.Scale(left_frame, variable=fat_var, from_=0, to=200,
++sc_fat = Scale(left_frame, variable=fat_var, from_=0, to=200,
+                   orient="horizontal", length=400, command=lambda e: None)
+ sc_fat.grid(row=4, column=2, sticky="w")
+ 
+ # MAX SGR
+-lbl_sug = tk.Label(left_frame, text="MAX SGR", font=("Arial", 24), fg="white", bg="red")
++lbl_sug = Label(left_frame, text="MAX SGR", font=("Arial", 24), fg="white", bg="red")
+ lbl_sug.grid(row=5, column=0, sticky="w", pady=5)
+-sp_sug = tk.Spinbox(left_frame, from_=0, to=200, font=("Arial", 16),
++sp_sug = Spinbox(left_frame, from_=0, to=200, font=("Arial", 16),
+                     textvariable=sug_var, width=8)
+ sp_sug.grid(row=5, column=1, sticky="w")
+-sc_sug = tk.Scale(left_frame, variable=sug_var, from_=0, to=200,
++sc_sug = Scale(left_frame, variable=sug_var, from_=0, to=200,
+                   orient="horizontal", length=400, command=lambda e: None)
+ sc_sug.grid(row=5, column=2, sticky="w")
+ 
+-# Radiobuttons （左侧四个）
+-category_var = tk.StringVar()
+-rb_snack = tk.Radiobutton(left_frame, text="Snack & Sides",    variable=category_var,
++# Radiobuttons
++category_var = StringVar()
++rb_snack = Radiobutton(left_frame, text="Snack & Sides",    variable=category_var,
+                           value="Snack & Sides",    font=("Arial", 20),
+                           fg="white", bg="red", selectcolor="black",
+                           activebackground="red", command=update_filters)
+ rb_snack.grid(row=6, column=0, sticky="w", pady=5)
+ 
+-rb_burger = tk.Radiobutton(left_frame, text="Burger & Sandwiches", variable=category_var,
++rb_burger = Radiobutton(left_frame, text="Burger & Sandwiches", variable=category_var,
+                            value="Burger & Sandwiches", font=("Arial", 20),
+                            fg="white", bg="red", selectcolor="black",
+                            activebackground="red", command=update_filters)
+ rb_burger.grid(row=7, column=0, sticky="w", pady=5)
+ 
+-rb_chicken = tk.Radiobutton(left_frame, text="Chicken & Fish", variable=category_var,
++rb_chicken = Radiobutton(left_frame, text="Chicken & Fish", variable=category_var,
+                             value="Chicken & Fish", font=("Arial", 20),
+                             fg="white", bg="red", selectcolor="black",
+                             activebackground="red", command=update_filters)
+ rb_chicken.grid(row=8, column=0, sticky="w", pady=5)
+ 
+-rb_desserts = tk.Radiobutton(left_frame, text="Desserts & Shakes", variable=category_var,
++rb_desserts = Radiobutton(left_frame, text="Desserts & Shakes", variable=category_var,
+                              value="Desserts & Shakes", font=("Arial", 20),
+                              fg="white", bg="red", selectcolor="black",
+                              activebackground="red", command=update_filters)
+ rb_desserts.grid(row=9, column=0, sticky="w", pady=5)
+ 
+-# Radiobuttons （右侧四个）
+-rb_mccafe = tk.Radiobutton(left_frame, text="McCafe", variable=category_var,
++# Radiobuttons
++rb_mccafe = Radiobutton(left_frame, text="McCafe", variable=category_var,
+                            value="McCafe", font=("Arial", 20),
+                            fg="white", bg="red", selectcolor="black",
+                            activebackground="red", command=update_filters)
+ rb_mccafe.grid(row=6, column=1, sticky="w", pady=5)
+ 
+-rb_beverages = tk.Radiobutton(left_frame, text="Beverages", variable=category_var,
++rb_beverages = Radiobutton(left_frame, text="Beverages", variable=category_var,
+                               value="Beverages", font=("Arial", 20),
+                               fg="white", bg="red", selectcolor="black",
+                               activebackground="red", command=update_filters)
+ rb_beverages.grid(row=7, column=1, sticky="w", pady=5)
+ 
+-rb_condiments = tk.Radiobutton(left_frame, text="Condiments", variable=category_var,
++rb_condiments = Radiobutton(left_frame, text="Condiments", variable=category_var,
+                                value="Condiments", font=("Arial", 20),
+                                fg="white", bg="red", selectcolor="black",
+                                activebackground="red", command=update_filters)
+ rb_condiments.grid(row=8, column=1, sticky="w", pady=5)
+ 
+-rb_breakfast = tk.Radiobutton(left_frame, text="Breakfast", variable=category_var,
++rb_breakfast = Radiobutton(left_frame, text="Breakfast", variable=category_var,
+                               value="Breakfast", font=("Arial", 20),
+                               fg="white", bg="red", selectcolor="black",
+                               activebackground="red", command=update_filters)
+ rb_breakfast.grid(row=9, column=1, sticky="w", pady=5)
+ 
+ 
+-# ——— 右侧 Listbox ———
++#右侧
+ right_frame.grid_rowconfigure(0, weight=0)
+ right_frame.grid_columnconfigure(0, weight=1)
+-name_var = tk.StringVar(value=all_name_list)
+-name_listbox = tk.Listbox(right_frame,
++name_var = StringVar(value=all_name_list)
++name_listbox = Listbox(right_frame,
+                           listvariable=name_var,
+-                          selectmode=tk.SINGLE,
++                          selectmode=SINGLE,
+                           font=("Arial", 14),
+-                          bg="white",
++                          bg="red",
+                           fg="black",
+-                        height = 30
+-                            )
++                          height = 40)
+ name_listbox.grid(row=0, column=0, sticky="nsew")
+ 
+ 
+-# ——— 启动主循环 ———
+ root.mainloop()
++
+Index: ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>'''\r\nJune 2025\r\nICS3U Final Performance Task\r\nCODED BY ***SAM***\r\n\r\n'''\r\n\r\nfrom tkinter import *\r\nfrom tkinter.font import Font\r\n\r\nfrom PIL import ImageTk\r\n\r\n\r\n\r\n#YOU ARE NOT RESPONSIBLE TO UNDERSTAND THIS FUNCTION\r\ndef generate_list_mcd(filename):\r\n    name_list = []\r\n    calorie_list = []\r\n    fat_list = []\r\n    sugar_list = []\r\n    category_list = []\r\n    allergens_list = []\r\n        \r\n    file_in = open(filename, encoding=\"utf-8\", errors='replace')\r\n    file_in.readline()\r\n\r\n    for line in file_in:\r\n        line = line.strip().split(\",\")\r\n        \r\n        \r\n        name_list.append(line[0])\r\n        calorie_list.append(int(line[1]))\r\n        fat_list.append(float(line[2]))\r\n        sugar_list.append(int(line[3]))\r\n        category_list.append(line[4])\r\n        allergens_list.append(line[5])\r\n                \r\n    return name_list,\\\r\n           calorie_list,\\\r\n           fat_list,\\\r\n           sugar_list,\\\r\n           category_list,\\\r\n           allergens_list\r\n\r\n\r\ndef all_name_list_test():\r\n    pass;\r\n\r\n\r\ndef all_calorie_list_test():\r\n    pass\r\n\r\ndef search():\r\n    pass\r\n\r\ndef seachbyai():\r\n    pass\r\n\r\ndef seachbyb():\r\n    pass\r\n\r\ndef on_advice():\r\n    pass\r\n\r\n#MAIN\r\nglobal matched_indexes, all_name_list, all_calorie_list, all_fat_list, all_sugar_list, all_category_list, all_allergens_list\r\n\r\nmatched_indexes = []\r\nall_name_list,\\\r\n    all_calorie_list,\\\r\n    all_fat_list,\\\r\n    all_sugar_list,\\\r\n    all_category_list,\\\r\n    all_allergens_list = generate_list_mcd(\"mcd_clean.csv\")\r\n\r\n\r\n\r\nroot = Tk()\r\nmainframe = Frame(root)\r\n\r\nname_var = StringVar()\r\nname_var.set(all_name_list)\r\nname_listbox = Listbox(mainframe, listvariable=name_var, selectmode=SINGLE)\r\n\r\nLabeltext1 = Label(mainframe, text=\"MAX CAL\")\r\nLabeltext2 = Label(mainframe, text=\"MAX FAT\")\r\nLabeltext3 = Label(mainframe, text=\"MAX SGR\")\r\n\r\nLabeltext1.grid(row=0, column=0)\r\nLabeltext2.grid()\r\nLabeltext3.grid()\r\n\r\nsearch_frame = Frame(mainframe, bg='orange', height=50)\r\nsearch_frame.grid(fill='x', pady=(0, 10))\r\nsearch_label = Label(search_frame, text=\"SEARCH :\", bg='orange', fg='white', font=('Arial', 16, 'bold'))\r\nsearch_label.grid(side='left', padx=(10,5))\r\nsearch_entry = Entry(search_frame, bg='white', fg='black', font=('Arial', 16))\r\nsearch_entry.grid(expand=True, padx=(0,10))\r\nsearch_button = Button(search_frame, text=\"Go\", command=search)\r\nsearch_button.grid(side='right', padx=(0,10))\r\n\r\ncategories = [\r\n    \"Snack & Sides\",\r\n    \"Burger & Sandwiches\",\r\n    \"Chicken & Fish\",\r\n    \"Desserts & Shakes\",\r\n    \"McCafe\",\r\n    \"Beverages\",\r\n    \"Condiments\",\r\n    \"Breakfast\",\r\n    \"Condiments\"\r\n]\r\ncat_title = Label(mainframe, text=\"Food Categories\", bg='red', fg='black')\r\n#我也不知道....暂定\r\n\r\n\r\nadvice_label = Label(mainframe, text=\"Get some advice from AI :\", bg='orange', fg='white', font=('Arial', 16, 'bold'))\r\nadvice_label.grid(side='left', padx=(10,5))\r\nadvice_entry = Entry(mainframe, bg='white', fg='black', font=('Arial', 16))\r\nadvice_button = Button(mainframe, text=\"Ask\", command=on_advice)\r\nadvice_button.grid(side='right', padx=(0,10))\r\n\r\n#暂时留空,暂时储存在这\r\nPhotoImage = ImageTk.PhotoImage()\r\nlogo_frame = Frame(left_col, bg='red')\r\nlogo_frame.grid(side='bottom', pady=10)\r\nlogo_label = Label(logo_frame, text=\"McDonald's Logo\", bg='red', fg='yellow', font=('Arial', 24, 'bold'))\r\nlogo_label.grid()\r\n\r\nLabelbigtext= Label(mainframe, text=\"ICS3U1-FPT\")\r\n\r\n#GRID WIDGETS\r\nmainframe.grid(padx=50, pady=50)\r\nname_listbox.grid(row=2, column=1, columnspan=2)\r\n\r\n\r\nroot.mainloop()\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py b/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py
+--- a/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py	(revision 585c150de8693be87d5203878d225dec520ff47c)
++++ b/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py	(date 1749648410980)
+@@ -5,6 +5,8 @@
+ 
+ '''
+ 
++
++
+ from tkinter import *
+ from tkinter.font import Font
+ 
+Index: ICS3U_FPT_2025_mcdonalds/v4.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/ICS3U_FPT_2025_mcdonalds/v4.py b/ICS3U_FPT_2025_mcdonalds/v4.py
+new file mode 100644
+--- /dev/null	(date 1749649254878)
++++ b/ICS3U_FPT_2025_mcdonalds/v4.py	(date 1749649254878)
+@@ -0,0 +1,208 @@
++from tkinter import *
++from tkinter.font import Font
++
++def generate_list_mcd(filename):
++    name_list = []
++    calorie_list = []
++    fat_list = []
++    sugar_list = []
++    category_list = []
++    allergens_list = []
++    with open(filename, encoding="utf-8", errors='replace') as file_in:
++        file_in.readline()  # 跳过表头
++        for line in file_in:
++            parts = line.strip().split(",")
++            if len(parts) < 6:
++                continue
++            name_list.append(parts[0])
++            calorie_list.append(int(parts[1]))
++            fat_list.append(float(parts[2]))
++            sugar_list.append(int(parts[3]))
++            category_list.append(parts[4])
++            allergens_list.append(parts[5])
++    return name_list, calorie_list, fat_list, sugar_list, category_list, allergens_list
++
++def search():
++    pass
++
++def get_ai_advice():
++    pass
++
++def update_filters():
++    selected = []
++    if snack_var.get():       selected.append("Snacks & Sides")
++    if burger_var.get():      selected.append("Burgers & Sandwiches")
++    if chicken_var.get():     selected.append("Chicken & Fish")
++    if desserts_var.get():    selected.append("Desserts & Shakes")
++    if mccafe_var.get():      selected.append("McCafe")
++    if beverages_var.get():   selected.append("Beverages")
++    if condiments_var.get():  selected.append("Condiments")
++    if breakfast_var.get():   selected.append("Breakfast")
++
++    name_listbox.delete(0, END)
++
++    for name, cat in zip(all_name_list, all_category_list):
++        if not selected or cat in selected:
++            name_listbox.insert(END, name)
++
++
++all_name_list, _, _, _, all_category_list, _ = generate_list_mcd("mcd_clean.csv")
++
++root = Tk()
++root.title("ICS3U Final Performance Task")
++root.geometry("1920x720")
++root.configure(bg="red")
++
++root.grid_rowconfigure(0, weight=1)
++root.grid_columnconfigure(0, weight=2, minsize=900)
++root.grid_columnconfigure(1, weight=3, minsize=1000)
++
++left_frame = Frame(root, bg="red")
++left_frame.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
++
++right_frame = Frame(root, bg="red")
++right_frame.grid(row=0, column=1, sticky="nsew", padx=20, pady=20)
++
++
++left_frame.grid_columnconfigure(0, weight=1, minsize=300)
++left_frame.grid_columnconfigure(1, weight=1, minsize=300)
++left_frame.grid_columnconfigure(2, weight=2, minsize=400)
++
++# 标题
++title_font = Font(family="Arial", size=64, weight="bold")
++Label(left_frame,
++      text="ICS3U1-FPT",
++      font=title_font,
++      fg="white",
++      bg="red").grid(row=0, column=0, columnspan=2, sticky="w")
++
++# SEARCH & GO
++search_entry = Entry(left_frame,
++                     font=("Arial", 32),
++                     fg="white",
++                     bg="#FF8C00",
++                     insertbackground="white")
++search_entry.insert(0, "SEARCH :")
++search_entry.grid(row=1, column=0, columnspan=2, sticky="we", pady=20, ipady=10)
++
++go_button = Button(left_frame,
++                   text="GO",
++                   font=("Arial", 32),
++                   fg="white",
++                   bg="#FF8C00",
++                   command=search)
++go_button.grid(row=1, column=2,
++               rowspan=2,
++               sticky="we",
++               pady=20,
++               padx=(20,0),
++               ipady=40)
++
++# AI 建议按钮
++Button(left_frame,
++       text="Get some advice from AI :",
++       font=("Arial", 28),
++       fg="white",
++       bg="#FF8C00",
++       anchor="w",
++       command=get_ai_advice).grid(row=2, column=0, columnspan=2, sticky="we", pady=20, ipady=10)
++
++# 滑块 + Spinbox
++cal_var = DoubleVar()
++fat_var = DoubleVar()
++sug_var = DoubleVar()
++
++Label(left_frame, text="MAX CAL", font=("Arial", 24), fg="white", bg="red").grid(row=3, column=0, sticky="w", pady=5)
++Spinbox(left_frame, from_=0, to=1000, font=("Arial", 16), textvariable=cal_var, width=8).grid(row=3, column=1, sticky="w")
++Scale(left_frame, variable=cal_var, from_=0, to=1000, orient=HORIZONTAL, length=400, command=lambda e: None).grid(row=3, column=2, sticky="w")
++
++Label(left_frame, text="MAX FAT", font=("Arial", 24), fg="white", bg="red").grid(row=4, column=0, sticky="w", pady=5)
++Spinbox(left_frame, from_=0, to=200, font=("Arial", 16), textvariable=fat_var, width=8).grid(row=4, column=1, sticky="w")
++Scale(left_frame, variable=fat_var, from_=0, to=200, orient=HORIZONTAL, length=400, command=lambda e: None).grid(row=4, column=2, sticky="w")
++
++Label(left_frame, text="MAX SGR", font=("Arial", 24), fg="white", bg="red").grid(row=5, column=0, sticky="w", pady=5)
++Spinbox(left_frame, from_=0, to=200, font=("Arial", 16), textvariable=sug_var, width=8).grid(row=5, column=1, sticky="w")
++Scale(left_frame, variable=sug_var, from_=0, to=200, orient=HORIZONTAL, length=400, command=lambda e: None).grid(row=5, column=2, sticky="w")
++
++
++snack_var    = BooleanVar()
++burger_var   = BooleanVar()
++chicken_var  = BooleanVar()
++desserts_var = BooleanVar()
++mccafe_var   = BooleanVar()
++beverages_var= BooleanVar()
++condiments_var=BooleanVar()
++breakfast_var= BooleanVar()
++
++Checkbutton(left_frame, text="Snack & Sides",    variable=snack_var,    onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=6, column=0, sticky="w", pady=5)
++Checkbutton(left_frame, text="Burger & Sandwiches", variable=burger_var, onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=7, column=0, sticky="w", pady=5)
++Checkbutton(left_frame, text="Chicken & Fish",     variable=chicken_var, onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=8, column=0, sticky="w", pady=5)
++Checkbutton(left_frame, text="Desserts & Shakes",  variable=desserts_var,onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=9, column=0, sticky="w", pady=5)
++
++Checkbutton(left_frame, text="McCafe",       variable=mccafe_var,   onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=6, column=1, sticky="w", pady=5)
++Checkbutton(left_frame, text="Beverages",    variable=beverages_var,onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=7, column=1, sticky="w", pady=5)
++Checkbutton(left_frame, text="Condiments",   variable=condiments_var,onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=8, column=1, sticky="w", pady=5)
++Checkbutton(left_frame, text="Breakfast",    variable=breakfast_var,onvalue=True, offvalue=False,
++            font=("Arial",20), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=9, column=1, sticky="w", pady=5)
++
++
++
++#右侧过敏源筛选
++#Cereal Containing gluten;
++#Egg;
++#Milk;
++#Soya;
++#Sesame
++
++Sesame_var = BooleanVar()
++Soya_var   = BooleanVar()
++milk_var= BooleanVar()
++egg_var=BooleanVar()
++ccg_var= BooleanVar()
++
++Checkbutton(right_frame, text="Cereal Containing gluten",    variable=ccg_var,onvalue=True, offvalue=False,
++            font=("Arial",10), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=0, column=0, sticky="w", pady=5)
++Checkbutton(right_frame, text="Egg",    variable=egg_var,onvalue=True, offvalue=False,
++            font=("Arial",10), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=0, column=1, sticky="w", pady=5)
++Checkbutton(right_frame, text="Milk",    variable=milk_var,onvalue=True, offvalue=False,
++            font=("Arial",10), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=0, column=2, sticky="w", pady=5)
++Checkbutton(right_frame, text="Soya",    variable=Soya_var,onvalue=True, offvalue=False,
++            font=("Arial",10), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=1, column=3, sticky="w", pady=5)
++Checkbutton(right_frame, text="Sesame",    variable=Sesame_var,onvalue=True, offvalue=False,
++            font=("Arial",10), fg="white", bg="red", selectcolor="black",
++            activebackground="red", command=update_filters).grid(row=1, column=4, sticky="w", pady=5)
++
++#Listbox
++right_frame.grid_rowconfigure(0, weight=0)
++right_frame.grid_columnconfigure(0, weight=1)
++
++name_var = StringVar(value=all_name_list)
++name_listbox = Listbox(right_frame,
++                       listvariable=name_var,
++                       selectmode=SINGLE,
++                       font=("Arial",14),
++                       bg="white",
++                       fg="black",
++                       height=40)
++name_listbox.grid(row=2, columnspan=4,column=0, sticky="nsew")
++
++root.mainloop()
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"f9a540f9-0308-4ef4-ad32-e426899f3413\" name=\"更改\" comment=\"更改w\">\r\n      <change afterPath=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/v4.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/v3.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/v3.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 3\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2yHqY4Jg7cA7vNPhO0Qo4v2k0yG\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <OptionsSetting value=\"false\" id=\"Update\" />\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Python.ICS3U_2025_mcd_startercode.executor\": \"Run\",\r\n    \"Python.ICS3U_2025_mcd_startercodeV1.executor\": \"Run\",\r\n    \"Python.v1.executor\": \"Run\",\r\n    \"Python.v2.executor\": \"Run\",\r\n    \"Python.v3.executor\": \"Run\",\r\n    \"Python.v4.executor\": \"Run\",\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"git-widget-placeholder\": \"main\",\r\n    \"last_opened_file_path\": \"F:/python save/G11CSFPT/ICS3U_FPT_2025_mcdonalds\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"F:\\python save\\G11CSFPT\\ICS3U_FPT_2025_mcdonalds\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\">\r\n    <configuration name=\"ICS3U_2025_mcd_startercode\" type=\"PythonConfigurationType\" factoryName=\"Python\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <module name=\"g11fpt\" />\r\n      <option name=\"ENV_FILES\" value=\"\" />\r\n      <option name=\"INTERPRETER_OPTIONS\" value=\"\" />\r\n      <option name=\"PARENT_ENVS\" value=\"true\" />\r\n      <envs>\r\n        <env name=\"PYTHONUNBUFFERED\" value=\"1\" />\r\n      </envs>\r\n      <option name=\"SDK_HOME\" value=\"\" />\r\n      <option name=\"WORKING_DIRECTORY\" value=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds\" />\r\n      <option name=\"IS_MODULE_SDK\" value=\"true\" />\r\n      <option name=\"ADD_CONTENT_ROOTS\" value=\"true\" />\r\n      <option name=\"ADD_SOURCE_ROOTS\" value=\"true\" />\r\n      <EXTENSION ID=\"PythonCoverageRunConfigurationExtension\" runner=\"coverage.py\" />\r\n      <option name=\"SCRIPT_NAME\" value=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py\" />\r\n      <option name=\"PARAMETERS\" value=\"\" />\r\n      <option name=\"SHOW_COMMAND_LINE\" value=\"false\" />\r\n      <option name=\"EMULATE_TERMINAL\" value=\"false\" />\r\n      <option name=\"MODULE_MODE\" value=\"false\" />\r\n      <option name=\"REDIRECT_INPUT\" value=\"false\" />\r\n      <option name=\"INPUT_FILE\" value=\"\" />\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Python.ICS3U_2025_mcd_startercode\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-python-sdk-7a29c1521ef0-c986f194a52a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.11799.298\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"应用程序级\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"默认任务\">\r\n      <changelist id=\"f9a540f9-0308-4ef4-ad32-e426899f3413\" name=\"更改\" comment=\"\" />\r\n      <created>1749501890773</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1749501890773</updated>\r\n      <workItem from=\"1749501891811\" duration=\"293000\" />\r\n      <workItem from=\"1749560004484\" duration=\"2806000\" />\r\n      <workItem from=\"1749573349229\" duration=\"2490000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"更改w\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1749645487926</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1749645487926</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"2\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"更改w\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"更改w\" />\r\n  </component>\r\n  <component name=\"com.intellij.coverage.CoverageDataManagerImpl\">\r\n    <SUITE FILE_PATH=\"coverage/g11fpt$v1.coverage\" NAME=\"v1 覆盖结果\" MODIFIED=\"1749502139740\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\r\n    <SUITE FILE_PATH=\"coverage/G11CSFPT$ICS3U_2025_mcd_startercodeV1.coverage\" NAME=\"ICS3U_2025_mcd_startercodeV1 Coverage Results\" MODIFIED=\"1749561318632\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds\" />\r\n    <SUITE FILE_PATH=\"coverage/G11CSFPT$v3.coverage\" NAME=\"v3 Coverage Results\" MODIFIED=\"1749646672944\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds\" />\r\n    <SUITE FILE_PATH=\"coverage/g11fpt$v2.coverage\" NAME=\"v2 覆盖结果\" MODIFIED=\"1749502175337\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"false\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$\" />\r\n    <SUITE FILE_PATH=\"coverage/G11CSFPT$v4.coverage\" NAME=\"v4 Coverage Results\" MODIFIED=\"1749649254883\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds\" />\r\n    <SUITE FILE_PATH=\"coverage/G11CSFPT$v1.coverage\" NAME=\"v1 Coverage Results\" MODIFIED=\"1749576127137\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds\" />\r\n    <SUITE FILE_PATH=\"coverage/G11CSFPT$ICS3U_2025_mcd_startercode.coverage\" NAME=\"ICS3U_2025_mcd_startercode Coverage Results\" MODIFIED=\"1749645581535\" SOURCE_PROVIDER=\"com.intellij.coverage.DefaultCoverageFileProvider\" RUNNER=\"coverage.py\" COVERAGE_BY_TEST_ENABLED=\"true\" COVERAGE_TRACING_ENABLED=\"false\" WORKING_DIRECTORY=\"$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 585c150de8693be87d5203878d225dec520ff47c)
++++ b/.idea/workspace.xml	(date 1749732055537)
+@@ -6,7 +6,6 @@
+   <component name="ChangeListManager">
+     <list default="true" id="f9a540f9-0308-4ef4-ad32-e426899f3413" name="更改" comment="更改w">
+       <change afterPath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/v4.py" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py" beforeDir="false" afterPath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/ICS3U_2025_mcd_startercode.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/ICS3U_FPT_2025_mcdonalds/v3.py" afterDir="false" />
+     </list>
+@@ -37,26 +36,26 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Python.ICS3U_2025_mcd_startercode.executor": "Run",
+-    "Python.ICS3U_2025_mcd_startercodeV1.executor": "Run",
+-    "Python.v1.executor": "Run",
+-    "Python.v2.executor": "Run",
+-    "Python.v3.executor": "Run",
+-    "Python.v4.executor": "Run",
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "git-widget-placeholder": "main",
+-    "last_opened_file_path": "F:/python save/G11CSFPT/ICS3U_FPT_2025_mcdonalds",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Python.ICS3U_2025_mcd_startercode.executor&quot;: &quot;Run&quot;,
++    &quot;Python.ICS3U_2025_mcd_startercodeV1.executor&quot;: &quot;Run&quot;,
++    &quot;Python.v1.executor&quot;: &quot;Run&quot;,
++    &quot;Python.v2.executor&quot;: &quot;Run&quot;,
++    &quot;Python.v3.executor&quot;: &quot;Run&quot;,
++    &quot;Python.v4.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
++    &quot;last_opened_file_path&quot;: &quot;F:/python save/G11CSFPT/ICS3U_FPT_2025_mcdonalds&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="F:\python save\G11CSFPT\ICS3U_FPT_2025_mcdonalds" />
+@@ -119,7 +118,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1749645487926</updated>
+     </task>
+-    <option name="localTasksCounter" value="2" />
++    <task id="LOCAL-00002" summary="更改w">
++      <option name="closed" value="true" />
++      <created>1749649306268</created>
++      <option name="number" value="00002" />
++      <option name="presentableId" value="LOCAL-00002" />
++      <option name="project" value="LOCAL" />
++      <updated>1749649306268</updated>
++    </task>
++    <option name="localTasksCounter" value="3" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">

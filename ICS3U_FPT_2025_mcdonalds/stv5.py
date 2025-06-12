@@ -45,47 +45,15 @@ def search():
 
     name_listbox.delete(0, END)
 
-    results = []
-    for name, cal, fat, sug, cat, allerg_str in zip(
-        all_name_list,
-        all_calorie_list,
-        all_fat_list,
-        all_sugar_list,
-        all_category_list,
-        all_allergens_list
-    ):
-        # 分类过滤
-        if sel_cat != "All" and cat != sel_cat:
-            continue
-        # 过敏源过滤
-        allerg_items = allerg_str.split(";") if allerg_str else []
-        if any(a in allerg_items for a in to_filter):
-            continue
-        # 阈值过滤
-        if cal > max_cal or fat > max_fat or sug > max_sug:
-            continue
-        # 搜索匹配
-        if query and query.lower() not in name.lower():
-            continue
-        results.append(name)
 
-    if not results and query:
-        close = difflib.get_close_matches(query, all_name_list, n=10, cutoff=0.5)
-        results = close if close else []
-
-    if results:
-        for item in results:
-            name_listbox.insert(END, item)
-    else:
-        name_listbox.insert(END, "No matches found")
-
-def get_random_advice():
+def get_ai_advice():
     pass
 
-def update_filters():
+def update_filters(*args):
+    # 分类、过敏源、阈值或滑块变化时重新搜索
     search()
 
-
+# ——— 读取数据 ———
 all_name_list, all_calorie_list, all_fat_list, all_sugar_list, all_category_list, all_allergens_list = \
     generate_list_mcd("mcd_clean.csv")
 
@@ -94,6 +62,7 @@ root.title("ICS3U Final Performance Task")
 root.geometry("1920x720")
 root.configure(bg="red")
 
+# 分割左右两部分
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=2, minsize=900)
 root.grid_columnconfigure(1, weight=3, minsize=1000)
@@ -114,7 +83,7 @@ right_frame.grid_rowconfigure(2, weight=1)
 for c in range(3):
     right_frame.grid_columnconfigure(c, weight=1)
 
-#左侧内容
+# ——— 左侧内容 ———
 title_font = Font(family="Arial", size=64, weight="bold")
 Label(left_frame, text="ICS3U1-FPT", font=title_font, fg="white", bg="red")\
     .grid(row=0, column=0, columnspan=2, sticky="w")
@@ -135,19 +104,20 @@ def on_search_focus_in(event):
 
 search_entry.bind("<FocusIn>", on_search_focus_in)
 
-# GO
+# GO 按钮
 go_button = Button(left_frame, text="GO", font=("Arial", 32),
                    fg="white", bg="#FF8C00", command=search)
 go_button.grid(row=1, column=2, rowspan=2, sticky="we",
                pady=20, padx=(20,0), ipady=40)
 
-Button(left_frame, text="Get random one",
+# AI 建议
+Button(left_frame, text="Get some advice from AI :",
        font=("Arial", 28), fg="white", bg="#FF8C00",
-       anchor="w", command=get_random_advice)\
+       anchor="w", command=get_ai_advice)\
     .grid(row=2, column=0, columnspan=2, sticky="we",
           pady=20, ipady=10)
 
-#Spinbox
+# 滑块 + Spinbox
 cal_var = DoubleVar(value=max(all_calorie_list))
 fat_var = DoubleVar(value=max(all_fat_list))
 sug_var = DoubleVar(value=max(all_sugar_list))
@@ -157,7 +127,7 @@ Label(left_frame, text="MAX CAL", font=("Arial", 24),
 Spinbox(left_frame, from_=0, to=max(all_calorie_list),
         textvariable=cal_var, font=("Arial",16), width=8).grid(row=3, column=1, sticky="w")
 Scale(left_frame, variable=cal_var, from_=0, to=max(all_calorie_list),
-      orient=HORIZONTAL, length=250, sliderlength=30,
+      orient=HORIZONTAL, length=270, sliderlength=30,
       command=update_filters).grid(row=3, column=2, sticky="w")
 
 Label(left_frame, text="MAX FAT", font=("Arial", 24),
@@ -165,7 +135,7 @@ Label(left_frame, text="MAX FAT", font=("Arial", 24),
 Spinbox(left_frame, from_=0, to=max(all_fat_list),
         textvariable=fat_var, font=("Arial",16), width=8).grid(row=4, column=1, sticky="w")
 Scale(left_frame, variable=fat_var, from_=0, to=max(all_fat_list),
-      orient=HORIZONTAL, length=250, sliderlength=30,
+      orient=HORIZONTAL, length=400, sliderlength=30,
       command=update_filters).grid(row=4, column=2, sticky="w")
 
 Label(left_frame, text="MAX SGR", font=("Arial", 24),
@@ -173,10 +143,10 @@ Label(left_frame, text="MAX SGR", font=("Arial", 24),
 Spinbox(left_frame, from_=0, to=max(all_sugar_list),
         textvariable=sug_var, font=("Arial",16), width=8).grid(row=5, column=1, sticky="w")
 Scale(left_frame, variable=sug_var, from_=0, to=max(all_sugar_list),
-      orient=HORIZONTAL, length=250, sliderlength=30,
+      orient=HORIZONTAL, length=400, sliderlength=30,
       command=update_filters).grid(row=5, column=2, sticky="w")
 
-#分类下拉菜单
+# 分类下拉菜单
 options = ["All"] + sorted(set(all_category_list))
 category_var = StringVar(value="All")
 optmenu = OptionMenu(left_frame, category_var, *options, command=update_filters)
@@ -184,12 +154,7 @@ optmenu.config(font=("Arial",20), fg="white", bg="red", highlightthickness=0)
 optmenu["menu"].config(font=("Arial",20), bg="white")
 optmenu.grid(row=6, column=0, columnspan=2, sticky="we", pady=20)
 
-Aiseed=StringVar()
-Aiseed.set("hello world")
-Aiseeded=Label(left_frame, textvariable=Aiseed,bg="red", fg="white", font=("Arial",20))
-Aiseeded.grid(row=8, column=0, columnspan=2, sticky="w")
-
-#右侧
+# ——— 右侧过敏源多选 ———
 gluten_var  = BooleanVar()
 egg_var     = BooleanVar()
 milk_var    = BooleanVar()
@@ -231,4 +196,3 @@ name_listbox = Listbox(right_frame, listvariable=name_var,
 name_listbox.grid(row=2, column=0, columnspan=3, sticky="nsew")
 
 root.mainloop()
-明天计划我也不知道.....

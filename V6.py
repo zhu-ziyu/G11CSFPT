@@ -69,23 +69,26 @@ def search():
             continue
         results.append(name)
 
+    # 如果没有直接匹配、且用户的查询非空，则尝试相近匹配
     if not results and query:
         close = difflib.get_close_matches(query, all_name_list, n=10, cutoff=0.5)
         results = close if close else []
 
+    # 显示结果或提示
     if results:
         for item in results:
             name_listbox.insert(END, item)
     else:
         name_listbox.insert(END, "No matches found")
 
-def get_random_advice():
+def get_ai_advice():
     pass
 
-def update_filters():
+def update_filters(*args):
+    # 分类、过敏源、阈值或滑块变化时重新搜索
     search()
 
-
+# ——— 读取数据 ———
 all_name_list, all_calorie_list, all_fat_list, all_sugar_list, all_category_list, all_allergens_list = \
     generate_list_mcd("mcd_clean.csv")
 
@@ -94,6 +97,7 @@ root.title("ICS3U Final Performance Task")
 root.geometry("1920x720")
 root.configure(bg="red")
 
+# 分割左右两部分
 root.grid_rowconfigure(0, weight=1)
 root.grid_columnconfigure(0, weight=2, minsize=900)
 root.grid_columnconfigure(1, weight=3, minsize=1000)
@@ -114,7 +118,7 @@ right_frame.grid_rowconfigure(2, weight=1)
 for c in range(3):
     right_frame.grid_columnconfigure(c, weight=1)
 
-#左侧内容
+# ——— 左侧内容 ———
 title_font = Font(family="Arial", size=64, weight="bold")
 Label(left_frame, text="ICS3U1-FPT", font=title_font, fg="white", bg="red")\
     .grid(row=0, column=0, columnspan=2, sticky="w")
@@ -135,19 +139,20 @@ def on_search_focus_in(event):
 
 search_entry.bind("<FocusIn>", on_search_focus_in)
 
-# GO
+# GO 按钮
 go_button = Button(left_frame, text="GO", font=("Arial", 32),
                    fg="white", bg="#FF8C00", command=search)
 go_button.grid(row=1, column=2, rowspan=2, sticky="we",
                pady=20, padx=(20,0), ipady=40)
 
-Button(left_frame, text="Get random one",
+# AI 建议
+Button(left_frame, text="Get some advice from AI :",
        font=("Arial", 28), fg="white", bg="#FF8C00",
-       anchor="w", command=get_random_advice)\
+       anchor="w", command=get_ai_advice)\
     .grid(row=2, column=0, columnspan=2, sticky="we",
           pady=20, ipady=10)
 
-#Spinbox
+# 滑块 + Spinbox
 cal_var = DoubleVar(value=max(all_calorie_list))
 fat_var = DoubleVar(value=max(all_fat_list))
 sug_var = DoubleVar(value=max(all_sugar_list))
@@ -176,7 +181,7 @@ Scale(left_frame, variable=sug_var, from_=0, to=max(all_sugar_list),
       orient=HORIZONTAL, length=250, sliderlength=30,
       command=update_filters).grid(row=5, column=2, sticky="w")
 
-#分类下拉菜单
+# 分类下拉菜单
 options = ["All"] + sorted(set(all_category_list))
 category_var = StringVar(value="All")
 optmenu = OptionMenu(left_frame, category_var, *options, command=update_filters)
@@ -189,7 +194,7 @@ Aiseed.set("hello world")
 Aiseeded=Label(left_frame, textvariable=Aiseed,bg="red", fg="white", font=("Arial",20))
 Aiseeded.grid(row=8, column=0, columnspan=2, sticky="w")
 
-#右侧
+# ——— 右侧过敏源多选 ———
 gluten_var  = BooleanVar()
 egg_var     = BooleanVar()
 milk_var    = BooleanVar()
@@ -231,4 +236,28 @@ name_listbox = Listbox(right_frame, listvariable=name_var,
 name_listbox.grid(row=2, column=0, columnspan=3, sticky="nsew")
 
 root.mainloop()
-明天计划我也不知道.....
+
+#帮我完成Get some advice from AI当用户点击这个button的时候程序会帮我给AI发送用户选择的max cal，max fat，max sgl，过敏源，以及表格，让ai推荐一款，20字以下的回答，然后将ai的回答塞入Aiseed的这个函数
+import requests
+import json
+
+response = requests.post(
+    url="https://openrouter.ai/api/v1/chat/completions",
+    headers={
+        "Authorization": "Bearer <OPENROUTER_API_KEY>",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "<YOUR_SITE_URL>",  # Optional. Site URL for rankings on openrouter.ai.
+        "X-Title": "<YOUR_SITE_NAME>",  # Optional. Site title for rankings on openrouter.ai.
+    },
+    data=json.dumps({
+        "model": "qwen/qwen3-235b-a22b:free",
+        "messages": [
+            {
+                "role": "user",
+                "content": "What is the meaning of life?"
+            }
+        ],
+
+    })
+)
+#我是接入来自openrouter.ai的ai api
