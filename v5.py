@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.font import Font
 import difflib
+import random
 
 # ——— 数据读取函数 ———
 def generate_list_mcd(filename):
@@ -80,7 +81,15 @@ def search():
         name_listbox.insert(END, "No matches found")
 
 def get_random_advice():
-    pass
+    # 从 Listbox 中获取当前所有条目
+    items = name_listbox.get(0, END)
+    if not items:
+        Aiseed.set("No items to choose")
+    else:
+        # 随机选一个
+        choice = random.choice(items)
+        Aiseed.set(choice)
+
 
 def update_filters():
     search()
@@ -231,4 +240,4 @@ name_listbox = Listbox(right_frame, listvariable=name_var,
 name_listbox.grid(row=2, column=0, columnspan=3, sticky="nsew")
 
 root.mainloop()
-明天计划我也不知道.....
+#帮我做完，当用户点击GET random one的时候从右边筛选过的list里面随机挑选一个然后储存到Aiseed这个函数里面
