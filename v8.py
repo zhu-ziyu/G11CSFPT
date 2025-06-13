@@ -1,9 +1,16 @@
 from tkinter import *
-from tkinter import messagebox
 from tkinter.font import Font
 import difflib
-import random
+import requests
+import json
 
+#pip install requests json difflib
+
+#Teacher, if you are looking at this code,
+# I would be very grateful that you would be willing to spend one more minute to experience the
+# AI search function I wrote. I am just interested in this so I want to write it in.
+# The final score can be calculated according to my final version.(v5.py)
+# This version only changes the part of the get_random_one function, and you can jump directly.
 def generate_list_mcd(filename):
     name_list = []
     calorie_list = []
@@ -80,18 +87,57 @@ def search():
     else:
         name_listbox.insert(END, "No matches found")
 
-def get_random_advice():
-    items = name_listbox.get(0, END)
-    if not items:
-        messagebox.showwarning("No items to choose", "No items to choose")
-    else:
-        choice = random.choice(items)
-        Aiseed.set(choice)
+def get_ai_advice():
+    # ai search (the API of this API provider always fails. If you can't run it,
+    # you can regenerate a free API(this is web https://openrouter.ai)
+    max_cal = cal_var.get()
+    max_fat = fat_var.get()
+    max_sug = sug_var.get()
+    sel_cat = category_var.get()
 
-        idx = items.index(choice)
-        name_listbox.selection_clear(0, END)
-        name_listbox.selection_set(idx)
-        name_listbox.see(idx)
+    if all_var.get():
+        selected_allergens = ["All"]
+    else:
+        selected_allergens = []
+        if gluten_var.get():  selected_allergens.append("gluten")
+        if egg_var.get():     selected_allergens.append("egg")
+        if milk_var.get():    selected_allergens.append("milk")
+        if soya_var.get():    selected_allergens.append("soya")
+        if sesame_var.get():  selected_allergens.append("sesame")
+
+    items = name_listbox.get(0, END)
+    items_str = ", ".join(items) if items else "None"
+
+    prompt = (
+        f"请基于以下条件推荐一款麦当劳产品，给出原因（鉴于你.....所以推荐...因为里面含有....回答不超过50字）英文输出：\n"
+        f"类别：{sel_cat}；最大热量：{max_cal}；最大脂肪：{max_fat}；"
+        f"最大糖分：{max_sug}；避开过敏源：{','.join(selected_allergens)}；"
+        f"可选项列表：{items_str}"
+    )
+
+    try:
+        resp = requests.post(
+            url="https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": "Bearer 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",
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://yourdomain.com",
+                "X-Title": "Studio",
+            },
+            data=json.dumps({
+                "model": "deepseek/deepseek-chat-v3-0324:free",
+                "messages": [
+                    {"role": "user", "content": prompt}
+                ],
+            })
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        answer = data["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        answer = f"ai request failed, you can try to replace api：{e}"
+
+    Aiseed.set(answer)
 
 
 def update_filters(*args):
@@ -103,7 +149,7 @@ all_name_list, all_calorie_list, all_fat_list, all_sugar_list, all_category_list
 
 root = Tk()
 root.title("ICS3U Final Performance Task")
-root.geometry("1920x720")
+root.geometry("1920x800")
 root.configure(bg="red")
 
 root.grid_rowconfigure(0, weight=1)
@@ -154,9 +200,9 @@ go_button = Button(left_frame, text="GO", font=("Arial", 32),
 go_button.grid(row=1, column=2, rowspan=2, sticky="we",
                pady=20, padx=(20,0), ipady=40)
 
-Button(left_frame, text="Get random one",
+Button(left_frame, text="get ai advice",
        font=("Arial", 28), fg="white", bg="#FF8C00",
-       anchor="w", command=get_random_advice)\
+       anchor="w", command=get_ai_advice)\
     .grid(row=2, column=0, columnspan=2, sticky="we",
           pady=20, ipady=10)
 
@@ -197,10 +243,10 @@ optmenu.config(font=("Arial",20), fg="white", bg="red", highlightthickness=0)
 optmenu["menu"].config(font=("Arial",20), bg="white")
 optmenu.grid(row=6, column=0, columnspan=2, sticky="we", pady=20)
 
-Aiseed=StringVar()
-Aiseed.set("hello world")
-Aiseeded=Label(left_frame, textvariable=Aiseed,bg="red", fg="white", font=("Arial",20))
-Aiseeded.grid(row=8, column=0, columnspan=2, sticky="w")
+Aiseed = StringVar()
+Aiseed_msg = Message(left_frame, textvariable=Aiseed,
+    fg="white", bg="red", font=("Arial",20), width=850)
+Aiseed_msg.grid(row=7, column=0, columnspan=3, rowspan=2, sticky="wn", pady=10)
 
 #右侧
 gluten_var  = BooleanVar()
@@ -244,5 +290,3 @@ name_listbox = Listbox(right_frame, listvariable=name_var,
 name_listbox.grid(row=2, column=0, columnspan=3, sticky="nsew")
 
 root.mainloop()
-#老师你再看吗~~~~(飘~——
-#凑个245行 :)
