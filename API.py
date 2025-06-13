@@ -23,3 +23,4 @@ r2 = requests.post(
     json=body
 )
 print(r2.status_code, r2.json())
+#                "Authorization": "Bearer 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",

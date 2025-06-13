@@ -118,7 +118,7 @@ def get_ai_advice():
         resp = requests.post(
             url="https://openrouter.ai/api/v1/chat/completions",
             headers={
-                "Authorization": "Bearer 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",
+                "Authorization": "Bearer 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",
                 "Content-Type": "application/json",
                 "HTTP-Referer": "https://yourdomain.com",
                 "X-Title": "Studio",
